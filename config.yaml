@@ -1,6 +1,6 @@
 baseURL: 'https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/'
 publishDir: docs
-title: GIS_WiSe_20-21_FlorianFranz
+title: GIS WiSe 20/21 Florian Franz
 theme: hugo-theme-clearwhite-gc
 languageCode: en-us
 disqusShortname: ''
@@ -48,7 +48,7 @@ params:
     - href: ''
       title: ''
   friends: no
-  header_image: img/home-header.jpg
+  header_image: img/post-bg-unix-linux.jpg
   image_404: img/404-bg.jpg
   keyword: my key words
   leancloud_app_id: ''
