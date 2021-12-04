@@ -1,0 +1,9 @@
+{{$repo := .Get 0 }}
+{{$pdf := .Get 1 }}
+{{$viewer := "/assets/pdfs/web/viewer.html?file="}}
+{{$base := print "/" $repo $viewer }}
+
+{{$url := print $base "/" $repo $pdf  }}
+{{print $url}}
+<!DOCTYPE html>
+<iframe id="pdf-js-viewer" src="{{$url}}" title="webviewer" align="center" frameborder="0" width="1000" height="800"></iframe>

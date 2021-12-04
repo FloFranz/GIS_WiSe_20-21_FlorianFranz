@@ -1,0 +1,32 @@
+<style>
+div.b {
+  text-align: center;
+  align: center;
+}
+figure {
+  border: 0px solid red;
+
+}
+iframe {
+  top: 0;
+  overflow: auto;
+
+}
+figcaption {
+  padding-right: 50px;
+  padding-left: 50px;
+  font-family: Tahoma, Verdana, sans-serif;
+  font-style: italic;
+  bottom: 0;
+  text-align: justify;
+  font-size: 13px;
+  width: {{.Get 1}};
+  border: 0px solid blue;
+}
+</style>
+<div class="b">
+<figure >
+<iframe src="{{.Get 0}}" width="{{.Get 1}}" height="{{.Get 2}}" frameborder="0" allowfullscreen="allowfullscreen" allow="geolocation *; microphone *; camera *; midi *; encrypted-media *" ></iframe>
+<figcaption>{{.Get 4}}</figcaption>
+</figure>
+</div>

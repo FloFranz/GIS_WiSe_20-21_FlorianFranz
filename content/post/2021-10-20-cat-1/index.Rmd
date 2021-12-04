@@ -1,0 +1,118 @@
+---
+title: Course one tagged with cat1 tag1
+author: Chris Reudenbach
+date: '2021-10-20'
+slug: []
+categories:
+  - cat1
+tags:
+  - tag1
+toc: true
+subtitle: 'This is a template course one'
+description: 'description'
+image: '/images/header-cat1.jpg'
+weight: 3
+---
+---
+title: cat 1
+author: author 1
+date: '2021-10-12'
+slug: []
+categories:
+  - cat1
+tags:
+  - tag1
+subtitle: 'subtitle'
+description: 'description'
+image: '/images/header-cat1.jpg'
+weight: 2
+---
+<style>.myDiv {margin-top: -36px;margin-right: -34%; text-align: right;}</style>
+<div class="myDiv">
+*Source: [Dr. John Snow](https://en.wikipedia.org/wiki/John_Snow) [via wikimedia](https://w.wiki/QtV)*
+</div>
+
+## Rmarkdown examples
+
+## highlight on the fly
+
+`r blogdown::shortcode("highlight", "bash", .content = "echo hello world;")`
+
+## link to local pdf
+
+`r blogdown::shortcode("pdf", "gi-base", "/assets/pdfs/test.pdf" , .type= "html")`
+
+
+## link to gist
+
+`r blogdown::shortcode("gist", "gisma", "bed5f4431b6d39098a35472359bb9969")`
+
+# link to web image
+
+![Dr. John Snow's map of the 1854 cholera outbreak in Soho, London via Wikimedia Commons](https://upload.wikimedia.org/wikipedia/commons/c/c7/Snow-cholera-map.jpg)
+
+## link to local image
+![](/gi-base/assets/images/ML_interpol.png)
+<figure>
+  <figcaption> The original dataset (top left) is a terrain model reduced to 8 meters with 48384 single pixels. 
+For interpolation, 1448 points were randomly drawn and interpolated with conventional kriging (top right), support vector machines (SVM) (middle left), neural networks (middle right), and two variants of random forest (bottom row). In each method, only the distance of the drawn points is used as a dependency.   
+  </figcaption>
+</figure>
+
+## r code generating a download
+
+```{r echo=FALSE}
+xfun::embed_file('../../../static/cases/suisse1.html')
+```
+
+## link
+[Tobler 1970](https://www.jstor.org/stable/143141).
+
+## integration of local html content
+
+`r blogdown::shortcode("hp5", "/gi-base/cases/suisse1.html","700", "680","center" 
+
+,"The blue dots are a typical example of irregularly distributed  points in space -- in this case, rain gauges in Switzerland. The overlaid  polygons are the corresponding Voronoi segments that define the corresponding closest geometrical areas (gisma 2021)")`
+
+
+<iframe src="https://gis-ma.org" title="Gis Lab Marburg University Website" width = "100%" height = "950px" allowfullscreen="true"> </iframe>
+
+
+
+
+# Common markdown table
+
+| Unit | Topic | Learning Content |
+|-------------|-------|-------------|
+|| ||
+| 01-1 |  | 
+|**06**| **Wrap-up**||
+| have | fun | ! |
+
+<div class="boxSuccess">
+<p class="headline"> Hint </p> 
+<p class="textline"> Again - For the course it is **mandantory** to save this script in the `src` folder named `course-name-provided-by-the-instructor_setup.R` and **source it always at the beginning** of each project start or at the start of an analysis or data processing script that is connected with this project. 
+</p>
+</div>
+
+
+`r blogdown::shortcode("alert", "Hint", "success" ,"black", "black", "Again - For the course it is **mandantory** to save this script in the *src* folder named *course-name-provided-by-the-instructor_setup.R* and **source it always at the beginning** of each project start or at the start of an analysis or data processing script that is connected with this project.")`
+
+## collapse
+
+```{r echo=FALSE} 
+blogdown::shortcode("collapse", "item",
+                    "content",
+                    .type = "html")
+```
+
+
+## accordion
+
+```{r echo=FALSE}
+blogdown::shortcode("acco", "item1", "item2", "item3",
+                    "content1", "content2", "content3",
+                    .type = "html")
+```
+
+

@@ -1,0 +1,77 @@
+baseurl: 'https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz'
+title: 'GIS_WiSe_20-21_FlorianFranz'
+pulishDir: 'docs'
+theme: hugo-theme-clearwhite-gc
+languageCode: en-us
+disqusShortname: ''
+googleAnalytics: ''
+preserveTaxonomyNames: yes
+paginate: 5
+hasCJKLanguage: yes
+outputs:
+  home:
+    - HTML
+    - RSS
+    - Algolia
+params:
+  SEOTitle: my Seotitle
+  about_me: no
+  addtional_menus:
+    - href: /top/archive/
+      title: CONTENT
+  algolia:
+    params:
+      - categories
+      - tags
+    vars:
+      - title
+      - summary
+      - date
+      - publishdate
+      - expirydate
+      - permalink
+  algolia_apiKey: ''
+  algolia_appId: ''
+  algolia_indexName: ''
+  algolia_search: no
+  ba_track_id: ''
+  bookmark_link:
+    - href: ''
+      title: ''
+  bookmarks: yes
+  description: my description
+  disqus_proxy: ''
+  disqus_site: ''
+  featured_condition_size: 1
+  featured_tags: yes
+  friend_link:
+    - href: ''
+      title: ''
+  friends: no
+  header_image: img/home-header.jpg
+  image_404: img/404-bg.jpg
+  keyword: my key words
+  leancloud_app_id: ''
+  leancloud_app_key: ''
+  omit_categories: no
+  page_view_conter: no
+  reward: no
+  sidebar_about_description: ''
+  sidebar_avatar: ''
+  slogan: ''
+  social:
+    email: youremail@gmail.com
+    github: https://github.com/yourgithub
+  title_404: :(
+outputFormats:
+  Algolia:
+    baseName: algolia
+    isPlainText: yes
+    mediaType: application/json
+    notAlternative: yes
+markup:
+  highlight:
+    style: dracula
+  tableOfContents:
+    endLevel: 3
+    startLevel: 1

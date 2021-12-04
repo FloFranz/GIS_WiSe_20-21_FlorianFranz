@@ -1,0 +1,28 @@
+<style>
+.headline{
+  color: {{.Get 2}};
+  font-size: 1.3em;
+  font-weight: bold;
+}  
+.textline{
+  color: black;
+  font-size: .9em;
+}  
+</style>
+
+
+  
+{{ $_hugo_config := `{ "version": 1 }` }}
+{{ $color := .Get 1 | default "primary" }}
+<div class="alert alert-{{ $color }}" role="alert">
+
+<div class="headline">
+{{ with .Get 0 }}{{ . | safeHTML }}{{ end }}
+</div>  
+
+<div class="textline">
+{{  .Get 4  | markdownify }}
+</div>
+</div>
+
+

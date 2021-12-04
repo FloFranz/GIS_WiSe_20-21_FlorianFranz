@@ -1,0 +1,6 @@
+{{$base := "https://docs.google.com/viewer?url="}}
+{{$foo1 := .Get 0 }}
+{{$foo2 := "&embedded=true" }}
+{{$url := print $base $foo1  $foo2  }}
+{{print $url}}
+<iframe src=$url width="1000px" height="800px"></iframe>

@@ -1,0 +1,55 @@
+---
+author: Hugo Authors
+categories:
+- Help
+date: "2021-07-18T10:52:59+08:00"
+description: A brief guide to use DiaqgrammeR
+draft: false
+mermaid: true
+title: DiagrammeR Graphs
+weight: 5
+---
+
+Here's a simple mermaid flowchart.
+
+```{r}
+library(DiagrammeR)
+DiagrammeR::mermaid("
+graph LR
+A(Rounded)-->B[Rectangular]
+B-->C{A Rhombus}
+C-->D[Rectangle One]
+C-->E[Rectangle Two]
+")
+    
+DiagrammeR::grViz("
+digraph a_nice_graph {
+
+# node definitions with substituted label text
+node [fontname = Helvetica]
+a [label = '@@1']
+b [label = '@@2-1']
+c [label = '@@2-2']
+d [label = '@@2-3']
+e [label = '@@2-4']
+f [label = '@@2-5']
+g [label = '@@2-6']
+h [label = '@@2-7']
+i [label = '@@2-8']
+j [label = '@@2-9']
+
+# edge definitions with the node IDs
+a -> {b c d e f g h i j}
+}
+
+[1]: 'top'
+[2]: 10:15
+")
+```    
+
+{{<mermaid>}}
+graph LR
+    Start --> Stop
+{{</mermaid>}}
+
+For more documentations on Mermaid, view [DiagrammeR](https://rich-iannone.github.io/DiagrammeR/).

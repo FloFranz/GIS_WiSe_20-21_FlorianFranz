@@ -1,0 +1,223 @@
+[
+        {   "id": "test",
+            "type": "article-journal",
+            "title": "Mapping Forest Biomass Using Remote Sensing and National Forest Inventory in China",
+            "container-title": "Forests",
+            "page": "1267-1283",
+            "volume": "5",
+            "issue": "6",
+            "abstract": "Quantifying the spatial pattern of large-scale forest biomass can provide a general picture of the carbon stocks within a region and is of great scientific and political importance. The combination of the advantages of remote sensing data and field survey data can reduce uncertainty as well as demonstrate the spatial distribution of forest biomass. In this study, the seventh national forest inventory statistics (for the period 2004–2008) and the spatially explicit MODIS Land Cover Type product (MCD12C1) were used together to quantitatively estimate the spatially-explicit distribution of forest biomass in China (with a resolution of 0.05°, ~5600 m). Our study demonstrated that the calibrated forest cover proportion maps allow proportionate downscaling of regional forest biomass statistics to forest cover pixels to produce a relatively fine-resolution biomass map. The total stock of forest biomass in China was 11.9 Pg with an average of 76.3 Mg ha−1 during the study period; the high values were located in mountain ranges in northeast, southwest and southeast China and were strongly correlated with forest age and forest density.",
+            "URL": "http://www.mdpi.com/1999-4907/5/6/1267",
+            "DOI": "10.3390/f5061267",
+            "language": "en",
+            "author": [
+                {
+                    "family": "Du",
+                    "given": "Ling"
+                },
+                {
+                    "family": "Zhou",
+                    "given": "Tao"
+                },
+                {
+                    "family": "Zou",
+                    "given": "Zhenhua"
+                },
+                {
+                    "family": "Zhao",
+                    "given": "Xiang"
+                },
+                {
+                    "family": "Huang",
+                    "given": "Kaicheng"
+                },
+                {
+                    "family": "Wu",
+                    "given": "Hao"
+                }
+            ],
+            "issued": {
+                "date-parts": [
+                    [
+                        2014,
+                        6,
+                        11
+                    ]
+                ]
+            },
+            "accessed": {
+                "date-parts": [
+                    [
+                        2018,
+                        11,
+                        26
+                    ]
+                ]
+            }
+        },
+        {
+            "id": "95674/J6XVGWJ3",
+            "type": "article-journal",
+            "title": "LiDAR Data Analysis with Fusion/LDV for Individual Tree Measurement",
+            "container-title": "Journal of Biodiversity Management & Forestry",
+            "volume": "6",
+            "issue": "3",
+            "abstract": "Objective: In recent years, many analyses have been conducted on the vertical structure of the forest using airborne LiDAR data. For analyze LiDAR data, analysis software is developed in Europe and USA. The forest conditions are quite differences between these country and Japan. In this study, we used Fusion/LiDAR Data Viewer (LDV) software that developed in USA, as a tool to analyze LiDAR data. The purpose of this study is to verify the efficacy of Fusion/LDV in Japanese forest management, in terms of function, accuracy, and type of output obtained using this software.\nMethods: The verification parameters used in this study were tree height, crown base height (CBH), and crown width (CW). We used three data sources – automatically extracted Fusion/LDV data, manually measured Fusion/LDV data, and field survey data. In order to compare the obtained data, we used scatter diagram analysis, root-mean-square error (RMSE), and differences from three different types of field survey data.\nResults: The study findings confirmed relatively high precision of both the automatic and manual measurements by Fusion/LDV in estimating tree height. The inclination of linear regression was over 0.9 in two survey areas. The results of R square were over 0.7. But while neither the measurement of CBH nor that of CW had such precision. The inclination of linear regression was near zero or minus values.\nConclusion: For individual tree height measurement, Fusion/LDV was very useful when a tree have a clear peak, it was available enough in Japanese forest environment.",
+            "URL": "https://www.scitechnol.com/peer-review/lidar-data-analysis-with-fusionldv-for-individual-tree-measurement-pVvf.php?article_id=6517",
+            "DOI": "10.4172/2327-4417.1000184",
+            "language": "en",
+            "author": [
+                {
+                    "family": "Shiota",
+                    "given": "Hiromi"
+                },
+                {
+                    "family": "Tanaka",
+                    "given": "Kazuhiro"
+                },
+                {
+                    "family": "Nagashima",
+                    "given": "Keiko"
+                }
+            ],
+            "issued": {
+                "date-parts": [
+                    [
+                        2017
+                    ]
+                ]
+            },
+            "accessed": {
+                "date-parts": [
+                    [
+                        2018,
+                        11,
+                        26
+                    ]
+                ]
+            }
+        },
+        {
+            "id": "95674/M6WZH64E",
+            "type": "article-journal",
+            "title": "Lidar-Based Models of Understory Bird Habitat in a Tropical Forest",
+            "page": "73",
+            "language": "en",
+            "author": [
+                {
+                    "family": "Grimm",
+                    "given": "Amanda G"
+                }
+            ]
+        },
+        {
+            "id": "95674/TF6L8DCW",
+            "type": "article-journal",
+            "title": "Lidar remote sensing of bird canopy habitat use in the Northeastern United States",
+            "page": "9",
+            "abstract": "A current challenge in biodiversity research is understanding the effect of vegetation structure on the potential of an ecosystem to support species richness and habitat use. We take advantage of the utility of satellite remote sensing, specifically lidar, for improving characterization of habitat structure and apply those advances to an exploration of bird habitat use in New England USA. In this study, we find that lidar metrics of canopy vertical structure and complexity provide unique and significant information for models of habitat use of a neotropical migrant bird species, the black-throated blue warbler, in the Hubbard Brook Experimental Forest, NH. Lidar metrics describing the vertical distribution of canopy elements and the complexity of canopy elements are thus both useful and important for biodiversity research, although we find that other aspects of habitat are equally important, including the type and seasonality of vegetation. Together these variables provide complementary information that advance biodiversity research and emphasize the relevance of remote sensing observations.",
+            "language": "en",
+            "author": [
+                {
+                    "family": "Goetz",
+                    "given": "Scott J"
+                },
+                {
+                    "family": "Steinberg",
+                    "given": "Daniel"
+                },
+                {
+                    "family": "Betts",
+                    "given": "Matthew"
+                },
+                {
+                    "family": "Holmes",
+                    "given": "Richard T"
+                },
+                {
+                    "family": "Doran",
+                    "given": "Patrick"
+                },
+                {
+                    "family": "Dubayah",
+                    "given": "Ralph"
+                },
+                {
+                    "family": "Hofton",
+                    "given": "Michelle"
+                }
+            ],
+            "issued": {
+                "date-parts": [
+                    [
+                        2008
+                    ]
+                ]
+            }
+        },
+        {
+            "id": "95674/2RT5KMLS",
+            "type": "article-journal",
+            "title": "Individual Tree Detection from Unmanned Aerial Vehicle (UAV) Derived Canopy Height Model in an Open Canopy Mixed Conifer Forest",
+            "container-title": "Forests",
+            "page": "340",
+            "volume": "8",
+            "issue": "9",
+            "abstract": "Advances in Unmanned Aerial Vehicle (UAV) technology and data processing capabilities have made it feasible to obtain high-resolution imagery and three dimensional (3D) data which can be used for forest monitoring and assessing tree attributes. This study evaluates the applicability of low consumer grade cameras attached to UAVs and structure-from-motion (SfM) algorithm for automatic individual tree detection (ITD) using a local-maxima based algorithm on UAV-derived Canopy Height Models (CHMs). This study was conducted in a private forest at Cache Creek located east of Jackson city, Wyoming. Based on the UAV-imagery, we allocated 30 ﬁeld plots of 20 m × 20 m. For each plot, the number of trees was counted manually using the UAV-derived orthomosaic for reference. A total of 367 reference trees were counted as part of this study and the algorithm detected 312 trees resulting in an accuracy higher than 85% (F-score of 0.86). Overall, the algorithm missed 55 trees (omission errors), and falsely detected 46 trees (commission errors) resulting in a total count of 358 trees. We further determined the impact of ﬁxed tree window sizes (FWS) and ﬁxed smoothing window sizes (SWS) on the ITD accuracy, and detected an inverse relationship between tree density and FWS. From our results, it can be concluded that ITD can be performed with an acceptable accuracy (F > 0.80) from UAV-derived CHMs in an open canopy forest, and has the potential to supplement future research directed towards estimation of above ground biomass and stem volume from UAV-imagery.",
+            "URL": "http://www.mdpi.com/1999-4907/8/9/340",
+            "DOI": "10.3390/f8090340",
+            "language": "en",
+            "author": [
+                {
+                    "family": "Mohan",
+                    "given": "Midhun"
+                },
+                {
+                    "family": "Silva",
+                    "given": "Carlos"
+                },
+                {
+                    "family": "Klauberg",
+                    "given": "Carine"
+                },
+                {
+                    "family": "Jat",
+                    "given": "Prahlad"
+                },
+                {
+                    "family": "Catts",
+                    "given": "Glenn"
+                },
+                {
+                    "family": "Cardil",
+                    "given": "Adrián"
+                },
+                {
+                    "family": "Hudak",
+                    "given": "Andrew"
+                },
+                {
+                    "family": "Dia",
+                    "given": "Mahendra"
+                }
+            ],
+            "issued": {
+                "date-parts": [
+                    [
+                        2017,
+                        9,
+                        11
+                    ]
+                ]
+            },
+            "accessed": {
+                "date-parts": [
+                    [
+                        2018,
+                        11,
+                        26
+                    ]
+                ]
+            }
+        }
+    ]

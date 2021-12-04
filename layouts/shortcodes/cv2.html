@@ -1,0 +1,6 @@
+{{$base := "/moc-rgis/assets/pdfs/web/viewer.html?file="}}
+{{$foo1 := .Get 0 }}
+{{$url := print $base $foo1  }}
+{{print $url}}
+<!DOCTYPE html>
+<iframe id="pdf-js-viewer" src="{{$url}}" title="webviewer" align="center" frameborder="0" width="1000" height="800"></iframe>

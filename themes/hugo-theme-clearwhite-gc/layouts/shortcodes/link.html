@@ -1,0 +1,3 @@
+<a href="{{ .Destination | safeURL }}"{{ if ne true (in (urls.Parse .Destination).Host (urls.Parse .Site.BaseURL).Host) }} target="_blank"{{ end }}>{{ .Page }}</a>
+
+    

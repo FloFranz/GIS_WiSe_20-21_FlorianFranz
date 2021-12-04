@@ -1,0 +1,44 @@
+
+    [
+        {
+            "id": "95674/US4MDY5U",
+            "type": "article-journal",
+            "title": "A forest structure model that determines crown layers and partitions growth and mortality rates for landscape-scale applications of tropical forests: Canopy layer model",
+            "container-title": "Journal of Ecology",
+            "page": "508-518",
+            "volume": "100",
+            "issue": "2",
+            "URL": "http://doi.wiley.com/10.1111/j.1365-2745.2011.01935.x",
+            "DOI": "10.1111/j.1365-2745.2011.01935.x",
+            "shortTitle": "A forest structure model that determines crown layers and partitions growth and mortality rates for landscape-scale applications of tropical forests",
+            "language": "en",
+            "author": [
+                {
+                    "family": "Bohlman",
+                    "given": "Stephanie"
+                },
+                {
+                    "family": "Pacala",
+                    "given": "Stephen"
+                }
+            ],
+            "issued": {
+                "date-parts": [
+                    [
+                        "2012"
+                    ]
+                ]
+            },
+            "accessed": {
+                "date-parts": [
+                    [
+                        2018,
+                        11,
+                        26
+                    ]
+                ]
+            }
+        }
+    ]
+
+
