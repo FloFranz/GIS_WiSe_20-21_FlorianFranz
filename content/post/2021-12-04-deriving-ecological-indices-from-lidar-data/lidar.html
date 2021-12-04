@@ -1,0 +1,104 @@
+---
+title: "Deriving ecological indices from LiDAR data"
+date: 2021-12-04
+author: "Florian Franz"
+image:       ""
+categories: ["aGIS"]
+tags: ["exercise"]
+---
+
+<script src="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+
+<div id="lidar-based-forest-indices" class="section level1">
+<h1>LiDAR based Forest Indices</h1>
+<div id="assessment" class="section level3">
+<h3>Assessment</h3>
+<p>Suppose the research question we are concerned with is as follows:</p>
+<p>Is it possible to derive a suitable set of predictor variables from LiDAR data to obtain a reliable prediction of the microclimate parameters temperature and humidity?</p>
+<p><strong>Task</strong></p>
+<ul>
+<li>Read the ressources related to forest and summarise at one article</li>
+<li>Decide which algorithms and indices are adequate to answer the research question</li>
+<li>Apply and document this findings with on base of the scripts of the this unit experiences</li>
+</ul>
+<hr />
+<p>I read the paper of del Río et al. (2016).</p>
+<p>The paper reviews a set of concepts for characterizing the structure, dynamics, and productivity of mixed stands though simple practical measures and indices. For this purpose, they present a lot of parameters to describe forest characteristics. The article doesn`t deal with the LiDAR technique, but gives an overview of possible parameters which in my opinion could be derived from LiDAR data. Some of them could be used to obtain a reliable prediction of the microclimate parameters temperature and humidity. So I will present possible parameters which describe the <strong>structure of a stand</strong>, because the structure is a main component in determination the forest microclimate.</p>
+<p>An important parameter to describe the structure of a forest is the <strong>stand density</strong>. It can be measured with the stand density index (SDI), which relates tree number and mean diameter. The Leaf Area Index (LAI) is also a density variable. Both would be useful to predict the forest microclimate.<br />
+Further, the <strong>vertical tree distribution</strong> is highly recommended to predict the microclimate. It requires the spatial positions of trees to be specified along with their size and species. The <strong>tree height</strong> is a particularly important size variable which can be used to describe the vertical structure. Mean height and standard deviation or variation coefficient of tree height can be used as a straightforward index to assess vertical structure. I think LiDAR data could be very useful in this context, because it enables the derivation of <strong>basic statistics of distributions</strong> such as minimum, mean, maximum, standard deviation, skewness, or kurtosis.</p>
+<p>Based on the information from the paper, I will try to decide which algorithms and indices are adequate to answer the research question. The developers of the lidR package, Jean-Romain Roussel, Tristan R.H. Goodbody and Piotr Tompalski, present <a href="https://jean-romain.github.io/lidRbook/metrics.html" title="Derived metrics">metrics</a> which could be used for this task. In the following code blocks I will present some of these metrics which can be useful for microclimate modelling.</p>
+<hr />
+<pre class="r"><code># Import the ALS point cloud from the Marburg Open Forest (MOF)
+las &lt;- list.files(envrmt$path_l_raw,
+                  pattern = glob2rx(&quot;*.las&quot;),
+                  full.names = TRUE)
+
+lidar_file &lt;- lidR::readLAS(las[1])
+lidar_file</code></pre>
+<pre><code>## class        : LAS (v1.3 format 1)
+## memory       : 2 Gb 
+## extent       : 477500, 478217.5, 5631730, 5632500 (xmin, xmax, ymin, ymax)
+## coord. ref.  : NA 
+## area         : 0.55 kunits²
+## points       : 26.35 million points
+## density      : 47.7 points/units²</code></pre>
+<p>Including all available points enables the derivation of metrics at the <strong>cloud level</strong>. The function cloud_metrics with func = .stdmetrics provide several metrics associated with the vertical structure of a stand.</p>
+<pre class="r"><code># Calculation of metrics at the cloud level
+cloud_metrics &lt;- lidR::cloud_metrics(lidar_file, func = lidR::.stdmetrics_z)
+head(cloud_metrics)</code></pre>
+<pre><code>## $zmax
+## [1] 371.824
+## 
+## $zmean
+## [1] 285.3682
+## 
+## $zsd
+## [1] 23.40896
+## 
+## $zskew
+## [1] 0.7478282
+## 
+## $zkurt
+## [1] 3.411944
+## 
+## $zentropy
+## [1] 0.760378</code></pre>
+<p>It can be seen that in this case, e.g. the mean height of the whole cloud is about 285 m.</p>
+<p>Furthermore, it is possible to derive metrics at the <strong>grid level</strong> using the function grid_metrics. This enables, for example, the calculation of the mean height within 1 x 1 m pixels.</p>
+<pre class="r"><code># Calculation of metrics at the grid level
+h_mean &lt;- lidR::grid_metrics(lidar_file, ~mean(Z), res = 1)
+
+lidR::plot(h_mean, col = lidR::height.colors(50),
+           main = &quot;Mean height within 1 m² cells&quot;)</code></pre>
+<p><img src="/GIS_WiSe_20-21_FlorianFranz/post/2021-12-04-deriving-ecological-indices-from-lidar-data/lidar_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p>Or as above for the whole cloud with .stdmetrics several metrics in this case within 100 m² cells.</p>
+<pre class="r"><code>grid_metrics &lt;- lidR::grid_metrics(lidar_file, func = lidR::.stdmetrics, res = 10)
+
+lidR::plot(grid_metrics, col = lidR::height.colors(50))</code></pre>
+<p><img src="/GIS_WiSe_20-21_FlorianFranz/post/2021-12-04-deriving-ecological-indices-from-lidar-data/lidar_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p>Additionally, grid metrics are useful to calculate the density, which is defined as the number of points within a pixel divided by the area of the pixels (Roussel et al. 2021).</p>
+<pre class="r"><code>density &lt;- lidR::grid_metrics(lidar_file, ~length(Z)/1, res = 1)
+
+lidR::plot(density, col = gray.colors(50,0,1),
+           main = &quot;Point density within 1 m² cells&quot;)</code></pre>
+<p><img src="/GIS_WiSe_20-21_FlorianFranz/post/2021-12-04-deriving-ecological-indices-from-lidar-data/lidar_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p>Moreover, metrics can also derived at the individual tree level. This requires a tree segmentation before. Derived metrics at the voxel and point level are not considered, as they are not seem to be relevant for a prediction of the microclimate.</p>
+<p><strong>Questions</strong></p>
+<ul>
+<li>How is it possible to derive basic statistics of the vertical structure (mean height etc.) only for the stand? Is it possible after a tree detection/segmentation?</li>
+</ul>
+<p><strong>Remarks</strong></p>
+<ul>
+<li>Interesting article how to estimate the LAI with LiDAR technology: Wang, Y. &amp; Fang, H. (2020): Estimation of LAI with the LiDAR Technology: A Review. <em>Remote Sensing</em> 12(20), 3457.</li>
+<li>Besides the function stdmetrics there are more existing functions which allow the user to compute predefined metrics, including the Leaf Area Density (LAD). This could be also an appreciable parameter for forest microclimate modelling.</li>
+</ul>
+<p><strong>Conclusion</strong></p>
+<p>Based on this experiences I have now gained, I would suggest to derive metrics at the grid level. The mean and maximum height could be very useful to obtain a reliable prediction of the microclimate. It would certainly also be beneficial to derive these parameters only for the stand so without the surface. Furthermore, the density is a useful parameter for microlclimate modelling. LAD and LAI are further variables which are useful in this context, requiring a bit more computation. The LAD for example need a vector of positive z coordinates, the thickness of the layers used (height bin), the extinction coefficient and the bottom limit of the profile as arguments. These parameters have to be provided or maybe calculated first.</p>
+<p><strong>References</strong></p>
+<ul>
+<li><p>del Río, M., Pretzsch, H., Alberdi, I., Bielak, K., Bravo, F., Brunner, A., Condés, S., Ducey, M.J., Fonseca, T., von Lüpke, N., Pach, M., Peric, S., Perot, T., Souidi, Z., Spathelf, P., Sterba, H., Tijardovic, M., Tomé, M., Vallet, P. &amp; Bravo-Oviedo, A. (2016): Characterization of the structure, dynamics, and productivity of mixed-species stands: review and perspectives. <em>Eur. J. Forest Res.</em> 135, 23-49.</p></li>
+<li><p>Roussel, J.-R., Goodbody, T.R.H. &amp; Tompalski, P. (2021): The lidR package. <a href="https://jean-romain.github.io/lidRbook/index.html" class="uri">https://jean-romain.github.io/lidRbook/index.html</a> (access: 27.11.2021).</p></li>
+</ul>
+</div>
+</div>
