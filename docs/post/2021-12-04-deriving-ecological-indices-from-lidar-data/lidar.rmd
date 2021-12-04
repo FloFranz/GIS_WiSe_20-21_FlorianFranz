@@ -2,7 +2,12 @@
 title: "Deriving ecological indices from LiDAR data"
 date: 2021-12-04
 author: "Florian Franz"
-image:       ""
+header:
+  image: "forest.jpg"
+image:
+  caption: ''
+  focal_point: ''
+  preview_only: no
 categories: ["aGIS"]
 tags: ["exercise"]
 ---
@@ -121,4 +126,5 @@ Based on this experiences I have now gained, I would suggest to derive metrics a
 - del Río, M., Pretzsch, H., Alberdi, I., Bielak, K., Bravo, F., Brunner, A., Condés, S., Ducey, M.J., Fonseca, T., von Lüpke, N., Pach, M., Peric, S., Perot, T., Souidi, Z., Spathelf, P., Sterba, H., Tijardovic, M., Tomé, M., Vallet, P. & Bravo-Oviedo, A. (2016): Characterization of the structure, dynamics, and productivity of mixed-species stands: review and perspectives. *Eur. J. Forest Res.* 135, 23-49.
 
 - Roussel, J.-R., Goodbody, T.R.H. & Tompalski, P. (2021): The lidR package. https://jean-romain.github.io/lidRbook/index.html (access: 27.11.2021).
+
 
