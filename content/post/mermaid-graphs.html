@@ -1,0 +1,67 @@
+---
+author: Hugo Authors
+categories:
+- Help
+date: "2021-07-18T10:52:59+08:00"
+description: A brief guide to use DiaqgrammeR
+draft: false
+mermaid: true
+title: DiagrammeR Graphs
+weight: 5
+---
+
+<script src="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
+<script src="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/d3/d3.min.js"></script>
+<script src="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/dagre/dagre-d3.min.js"></script>
+<link href="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/mermaid/dist/mermaid.css" rel="stylesheet" />
+<script src="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/mermaid/dist/mermaid.slim.min.js"></script>
+<link href="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/DiagrammeR-styles/styles.css" rel="stylesheet" />
+<script src="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/chromatography/chromatography.js"></script>
+<script src="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/DiagrammeR-binding/DiagrammeR.js"></script>
+<script src="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/viz/viz.js"></script>
+<script src="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/grViz-binding/grViz.js"></script>
+
+
+<p>Here’s a simple mermaid flowchart.</p>
+<pre class="r"><code>library(DiagrammeR)</code></pre>
+<pre><code>## Warning: Paket &#39;DiagrammeR&#39; wurde unter R Version 4.1.2 erstellt</code></pre>
+<pre class="r"><code>DiagrammeR::mermaid(&quot;
+graph LR
+A(Rounded)--&gt;B[Rectangular]
+B--&gt;C{A Rhombus}
+C--&gt;D[Rectangle One]
+C--&gt;E[Rectangle Two]
+&quot;)</code></pre>
+<div id="htmlwidget-1" style="width:672px;height:480px;" class="DiagrammeR html-widget"></div>
+<script type="application/json" data-for="htmlwidget-1">{"x":{"diagram":"\ngraph LR\nA(Rounded)-->B[Rectangular]\nB-->C{A Rhombus}\nC-->D[Rectangle One]\nC-->E[Rectangle Two]\n"},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>DiagrammeR::grViz(&quot;
+digraph a_nice_graph {
+
+# node definitions with substituted label text
+node [fontname = Helvetica]
+a [label = &#39;@@1&#39;]
+b [label = &#39;@@2-1&#39;]
+c [label = &#39;@@2-2&#39;]
+d [label = &#39;@@2-3&#39;]
+e [label = &#39;@@2-4&#39;]
+f [label = &#39;@@2-5&#39;]
+g [label = &#39;@@2-6&#39;]
+h [label = &#39;@@2-7&#39;]
+i [label = &#39;@@2-8&#39;]
+j [label = &#39;@@2-9&#39;]
+
+# edge definitions with the node IDs
+a -&gt; {b c d e f g h i j}
+}
+
+[1]: &#39;top&#39;
+[2]: 10:15
+&quot;)</code></pre>
+<div id="htmlwidget-2" style="width:672px;height:480px;" class="grViz html-widget"></div>
+<script type="application/json" data-for="htmlwidget-2">{"x":{"diagram":"\ndigraph a_nice_graph {\n\n# node definitions with substituted label text\nnode [fontname = Helvetica]\na [label = \"top\"]\nb [label = \"10\"]\nc [label = \"11\"]\nd [label = \"12\"]\ne [label = \"13\"]\nf [label = \"14\"]\ng [label = \"15\"]\nh [label = \"15\"]\ni [label = \"15\"]\nj [label = \"15\"]\n\n# edge definitions with the node IDs\na -> {b c d e f g h i j}\n}","config":{"engine":"dot","options":null}},"evals":[],"jsHooks":[]}</script>
+<p>{{<mermaid>}}
+graph LR
+Start –&gt; Stop
+{{</mermaid>}}</p>
+<p>For more documentations on Mermaid, view <a href="https://rich-iannone.github.io/DiagrammeR/">DiagrammeR</a>.</p>

@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Help on GIS_WiSe_20-21_FlorianFranz</title>
+    <link>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/categories/help/</link>
+    <description>Recent content in Help on GIS_WiSe_20-21_FlorianFranz</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 19 Jul 2021 10:52:59 +0800</lastBuildDate><atom:link href="https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/categories/help/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>About</title>
+      <link>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/post/about/</link>
+      <pubDate>Fri, 16 Jul 2021 11:24:06 +0800</pubDate>
+      
+      <guid>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/post/about/</guid>
+      <description>Some aboute this site text</description>
+    </item>
+    
+    <item>
+      <title>Instruction</title>
+      <link>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/post/instruction/</link>
+      <pubDate>Mon, 19 Jul 2021 10:52:59 +0800</pubDate>
+      
+      <guid>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/post/instruction/</guid>
+      <description>Features  Light/dark mode VSCode-style code hightlighting KaTeX Mermaid Google analytics Disqus/Utterances comments Optional ToC  Usage Before using Minima, make sure you&amp;rsquo;ve got Hugo(v0.41.0 or higher) installed on your device.
+Installation Suppose blog is where you place your sources.
+cd blog git init git submodule add --depth 1 https://github.com/mivinci/hugo-theme-minima.git themes/minima Or clone directly if you don&amp;rsquo;t wanna use the Git submodule.
+git clone https://github.com/mivinci/hugo-theme-minima.git themes/minima Anyways, you just need to put Minima under the blog/themes directory.</description>
+    </item>
+    
+    <item>
+      <title>Markdown Syntax Guide</title>
+      <link>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/post/markdown-syntax/</link>
+      <pubDate>Sun, 18 Jul 2021 10:52:59 +0800</pubDate>
+      
+      <guid>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/post/markdown-syntax/</guid>
+      <description>This article offers a sample of basic Markdown syntax that can be used in Hugo content files, also it shows whether basic HTML elements are decorated with CSS in a Hugo theme.
+Note: to get the Markdown syntax have a look at the markrdown text file. The following HTML &amp;lt;h1&amp;gt;—&amp;lt;h6&amp;gt; elements represent six levels of section headings. &amp;lt;h1&amp;gt; is the highest section level while &amp;lt;h6&amp;gt; is the lowest.
+H1 H2 H3 H4 H5 H6 Paragraph Xerum, quo qui aut unt expliquam qui dolut labo.</description>
+    </item>
+    
+    <item>
+      <title>Math Typesetting</title>
+      <link>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/post/math-typesetting/</link>
+      <pubDate>Sun, 18 Jul 2021 10:52:59 +0800</pubDate>
+      
+      <guid>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/post/math-typesetting/</guid>
+      <description>Mathematical notation in a Hugo project can be enabled by using third party JavaScript libraries.
+Examples  This is inline $ \(\varphi = \dfrac{1+\sqrt5}{2}= 1.6180339887…\)$ math. This is block math: $$ \varphi = 1+\frac{1} {1+\frac{1} {1+\frac{1} {1+\cdots} } } $$ This is inline $ (\varphi = \dfrac{1+\sqrt5}{2}= 1.6180339887…)$ math.
+This is block math: $$ \varphi = 1+\frac{1} {1+\frac{1} {1+\frac{1} {1+\cdots} } } $$</description>
+    </item>
+    
+    <item>
+      <title>DiagrammeR Graphs</title>
+      <link>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/post/mermaid-graphs/</link>
+      <pubDate>Sun, 18 Jul 2021 10:52:59 +0800</pubDate>
+      
+      <guid>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/post/mermaid-graphs/</guid>
+      <description>Here’s a simple mermaid flowchart.
+library(DiagrammeR)## Warning: Paket &amp;#39;DiagrammeR&amp;#39; wurde unter R Version 4.1.2 erstelltDiagrammeR::mermaid(&amp;quot;graph LRA(Rounded)--&amp;gt;B[Rectangular]B--&amp;gt;C{A Rhombus}C--&amp;gt;D[Rectangle One]C--&amp;gt;E[Rectangle Two]&amp;quot;){&#34;x&#34;:{&#34;diagram&#34;:&#34;\ngraph LR\nA(Rounded)--B[Rectangular]\nB--C{A Rhombus}\nC--D[Rectangle One]\nC--E[Rectangle Two]\n&#34;},&#34;evals&#34;:[],&#34;jsHooks&#34;:[]}DiagrammeR::grViz(&amp;quot;digraph a_nice_graph {# node definitions with substituted label textnode [fontname = Helvetica]a [label = &amp;#39;@@1&amp;#39;]b [label = &amp;#39;@@2-1&amp;#39;]c [label = &amp;#39;@@2-2&amp;#39;]d [label = &amp;#39;@@2-3&amp;#39;]e [label = &amp;#39;@@2-4&amp;#39;]f [label = &amp;#39;@@2-5&amp;#39;]g [label = &amp;#39;@@2-6&amp;#39;]h [label = &amp;#39;@@2-7&amp;#39;]i [label = &amp;#39;@@2-8&amp;#39;]j [label = &amp;#39;@@2-9&amp;#39;]# edge definitions with the node IDsa -&amp;gt; {b c d e f g h i j}}[1]: &amp;#39;top&amp;#39;[2]: 10:15&amp;quot;){&#34;</description>
+    </item>
+    
+  </channel>
+</rss>

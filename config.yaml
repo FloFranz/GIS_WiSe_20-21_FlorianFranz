@@ -1,6 +1,6 @@
-baseurl: 'https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz'
-title: 'GIS_WiSe_20-21_FlorianFranz'
-pulishDir: 'docs'
+baseURL: 'https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/'
+publishDir: docs
+title: GIS_WiSe_20-21_FlorianFranz
 theme: hugo-theme-clearwhite-gc
 languageCode: en-us
 disqusShortname: ''

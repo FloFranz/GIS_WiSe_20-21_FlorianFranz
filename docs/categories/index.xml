@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Categories on GIS_WiSe_20-21_FlorianFranz</title>
+    <link>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/categories/</link>
+    <description>Recent content in Categories on GIS_WiSe_20-21_FlorianFranz</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <lastBuildDate>Mon, 19 Jul 2021 10:52:59 +0800</lastBuildDate><atom:link href="https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/categories/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Help</title>
+      <link>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/categories/help/</link>
+      <pubDate>Mon, 19 Jul 2021 10:52:59 +0800</pubDate>
+      
+      <guid>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/categories/help/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>R</title>
+      <link>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/categories/r/</link>
+      <pubDate>Tue, 01 Dec 2020 21:13:14 -0500</pubDate>
+      
+      <guid>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/categories/r/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>
