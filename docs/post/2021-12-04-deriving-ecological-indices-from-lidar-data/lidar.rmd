@@ -2,16 +2,7 @@
 title: "Deriving ecological indices from LiDAR data"
 date: 2021-12-04
 author: "Florian Franz"
-#image:
-#  caption: ""
-#  focal_point: ""
-#  preview_only: no
-#header:
-#  image: "forest.jpg"
-#  caption: ""
 image: "/img/forest.jpg"
-#image: "/img/forest.jpg"
-#image: ![](/post/2021-12-04-deriving-ecological-indices-from-lidar-data/lidar_files/forest.jpg)
 categories: ["aGIS"]
 tags: ["exercise"]
 ---
@@ -130,5 +121,7 @@ Based on this experiences I have now gained, I would suggest to derive metrics a
 - del Río, M., Pretzsch, H., Alberdi, I., Bielak, K., Bravo, F., Brunner, A., Condés, S., Ducey, M.J., Fonseca, T., von Lüpke, N., Pach, M., Peric, S., Perot, T., Souidi, Z., Spathelf, P., Sterba, H., Tijardovic, M., Tomé, M., Vallet, P. & Bravo-Oviedo, A. (2016): Characterization of the structure, dynamics, and productivity of mixed-species stands: review and perspectives. *Eur. J. Forest Res.* 135, 23-49.
 
 - Roussel, J.-R., Goodbody, T.R.H. & Tompalski, P. (2021): The lidR package. https://jean-romain.github.io/lidRbook/index.html (access: 27.11.2021).
+
+- Header image: https://www.bundesregierung.de/breg-de/suche/rund-800-millionen-euro-fuer-den-wald-1675358 (Getty Images/iStockphoto/AVTG)
 
 
