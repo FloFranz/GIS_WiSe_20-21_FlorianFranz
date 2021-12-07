@@ -1,7 +1,7 @@
 baseURL: 'https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/'
 publishDir: docs
 title: GIS WiSe 20/21 Florian Franz
-theme: hugo-theme-clearwhite-gc
+theme: hugo-theme-cleanwhite-gc
 languageCode: en-us
 disqusShortname: ''
 googleAnalytics: ''
