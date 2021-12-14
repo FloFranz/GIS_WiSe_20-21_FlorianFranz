@@ -1,0 +1,112 @@
+---
+title: "Deriving ecological indices from LiDAR data renewed"
+date: 2021-11-11
+author: "Florian Franz"
+image:       ""
+categories: ["aGIS"]
+tags: ["task"]
+toc: true
+---
+
+# LiDAR based Forest Indices
+
+
+### Introduction
+Give a brief overview about the content and intented outcome of this task. Finsih this overview with a clearly adressed research question.
+
+
+### Data and Methods
+
+Give a brief overview about the data and methods you are using 
+
+### Results
+
+Describe your results with respect to the choosen Approach and with respect to the leading question 
+
+## Discussion
+Take your research question and your results and discuss the results with respect to your approach
+
+### References
+
+
+```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+require(envimaR)
+
+# MANDANTORY: defining the root folder DO NOT change this line
+rootDIR = "E:/edu/agis"
+
+#-- Further customization of the setup by the user this section 
+#-- can be freely customized only the definition of additional packages 
+#-- and directory paths MUST be done using the two variables 
+#-- appendpackagesToLoad and appendProjectDirList
+#-- feel free to remove this lines if you do not need them
+# define  additional packages comment if not needed
+appendpackagesToLoad = c("tmap")
+# define additional subfolders comment if not needed
+appendProjectDirList =  c("data/lidar/", "data/lidar/l_raw/", "data/lidar/l_norm/", "data/lidar/l_normalized/", "data/lidar/l_raster/")
+
+# MANDANTORY: calling the setup script also DO NOT change this line
+source(file.path(envimaR::alternativeEnvi(root_folder = rootDIR),"src/agis_setup1.R"),echo = TRUE)
+```
+
+### Setting up a lidR catalog structure
+
+```{r, message=FALSE}
+library(future)
+
+# Define variables for the lidR catalog
+chunksize = 250
+overlap = 25
+epsg_number = 25832
+
+mof100_ctg <- lidR::readLAScatalog(envrmt$path_l_raw)
+lidR::projection(mof100_ctg) <- epsg_number
+lidR::opt_chunk_size(mof100_ctg) = chunksize
+future::plan(multisession)
+lidR::opt_chunk_buffer(mof100_ctg) <- overlap
+lidR::opt_output_files(mof100_ctg) <- paste0(envrmt$path_l_norm,"/{ID}_norm")
+mof100_ctg@output_options$drivers$Raster$param$overwrite <- TRUE
+```
+
+### Derive CHM information from the ALS point cloud
+
+```{r, message=FALSE, results='hide'}
+# Calculate a digital terrain model
+dtm_knnidw_1m <- lidR::grid_terrain(mof100_ctg, res=1, algorithm = lidR::knnidw(k = 6L, p = 2))
+
+# Remove the elevation of the surface from the catalog data and create a new catalog
+mof100_ctg_chm <- lidR::normalize_height(mof100_ctg, dtm_knnidw_1m)
+```
+
+### Calculation of metrics at the grid level
+
+```{r, message=FALSE, results='hide'}
+h_mean <- lidR::grid_metrics(mof100_ctg_chm, ~mean(Z), res = 1)
+h_max <- lidR::grid_metrics(mof100_ctg_chm, ~max(Z), res = 1)
+
+f <- function(x) {
+  list(mean = mean(x), max = max(x))
+}
+
+h_mean_max <- lidR::grid_metrics(mof100_ctg_chm, ~f(Z), res = 1)
+
+lidR::plot(h_mean, col = lidR::height.colors(20),
+           main = "Mean height within 1 m² cells")
+
+lidR::plot(h_max, col = lidR::height.colors(20),
+           main = "Maximum height within 1 m² cells")
+
+lidR::plot(h_mean_max, col = lidR::height.colors(20),
+           main = c("Mean height within 1 m² cells",
+                    "Maximum height within 1 m² cells"),
+           cex.main = 1)
+```
+
+
+
+
+
+
+
+
+

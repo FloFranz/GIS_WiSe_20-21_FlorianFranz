@@ -1,0 +1,447 @@
+---
+title: "Deriving ecological indices from LiDAR data renewed"
+date: 2021-11-11
+author: "Florian Franz"
+image:       ""
+categories: ["aGIS"]
+tags: ["task"]
+toc: true
+---
+
+<script src="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+
+<div id="TOC">
+
+</div>
+
+<div id="lidar-based-forest-indices" class="section level1">
+<h1>LiDAR based Forest Indices</h1>
+<div id="introduction" class="section level3">
+<h3>Introduction</h3>
+<p>Give a brief overview about the content and intented outcome of this task. Finsih this overview with a clearly adressed research question.</p>
+</div>
+<div id="data-and-methods" class="section level3">
+<h3>Data and Methods</h3>
+<p>Give a brief overview about the data and methods you are using</p>
+</div>
+<div id="results" class="section level3">
+<h3>Results</h3>
+<p>Describe your results with respect to the choosen Approach and with respect to the leading question</p>
+</div>
+<div id="discussion" class="section level2">
+<h2>Discussion</h2>
+<p>Take your research question and your results and discuss the results with respect to your approach</p>
+<div id="references" class="section level3">
+<h3>References</h3>
+</div>
+<div id="setting-up-a-lidr-catalog-structure" class="section level3">
+<h3>Setting up a lidR catalog structure</h3>
+<pre class="r"><code>library(future)
+
+# Define variables for the lidR catalog
+chunksize = 250
+overlap = 25
+epsg_number = 25832
+
+mof100_ctg &lt;- lidR::readLAScatalog(envrmt$path_l_raw)
+lidR::projection(mof100_ctg) &lt;- epsg_number
+lidR::opt_chunk_size(mof100_ctg) = chunksize
+future::plan(multisession)
+lidR::opt_chunk_buffer(mof100_ctg) &lt;- overlap
+lidR::opt_output_files(mof100_ctg) &lt;- paste0(envrmt$path_l_norm,&quot;/{ID}_norm&quot;)
+mof100_ctg@output_options$drivers$Raster$param$overwrite &lt;- TRUE</code></pre>
+</div>
+<div id="derive-chm-information-from-the-als-point-cloud" class="section level3">
+<h3>Derive CHM information from the ALS point cloud</h3>
+<pre class="r"><code># Calculate a digital terrain model
+dtm_knnidw_1m &lt;- lidR::grid_terrain(mof100_ctg, res=1, algorithm = lidR::knnidw(k = 6L, p = 2))</code></pre>
+<pre><code>## Warning: There were 1 degenerated ground points. Some X Y coordinates were
+## repeated but with different Z coordinates. min Z were retained.</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning: There were 2 degenerated ground points. Some X Y coordinates were
+## repeated but with different Z coordinates. min Z were retained.</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning: There were 6 degenerated ground points. Some X Y coordinates were
+## repeated but with different Z coordinates. min Z were retained.</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning: There were 1 degenerated ground points. Some X Y Z coordinates were
+## repeated. They were removed.</code></pre>
+<pre><code>## Warning: There were 4 degenerated ground points. Some X Y coordinates were
+## repeated but with different Z coordinates. min Z were retained.</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning: There were 5 degenerated ground points. Some X Y coordinates were
+## repeated but with different Z coordinates. min Z were retained.</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning: There were 10 degenerated ground points. Some X Y coordinates were
+## repeated but with different Z coordinates. min Z were retained.</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning: There were 6 degenerated ground points. Some X Y coordinates were
+## repeated but with different Z coordinates. min Z were retained.</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning: There were 4 degenerated ground points. Some X Y coordinates were
+## repeated but with different Z coordinates. min Z were retained.</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning: There were 5 degenerated ground points. Some X Y coordinates were
+## repeated but with different Z coordinates. min Z were retained.</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning: There were 8 degenerated ground points. Some X Y coordinates were
+## repeated but with different Z coordinates. min Z were retained.</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning: There were 11 degenerated ground points. Some X Y coordinates were
+## repeated but with different Z coordinates. min Z were retained.</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre class="r"><code># Remove the elevation of the surface from the catalog data and create a new catalog
+mof100_ctg_chm &lt;- lidR::normalize_height(mof100_ctg, dtm_knnidw_1m)</code></pre>
+<p><img src="/GIS_WiSe_20-21_FlorianFranz/post/2021-12-11-deriving-ecological-indices-from-lidar-data-renewed/lidar_renewed_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+</div>
+<div id="calculation-of-metrics-at-the-grid-level" class="section level3">
+<h3>Calculation of metrics at the grid level</h3>
+<pre class="r"><code>h_mean &lt;- lidR::grid_metrics(mof100_ctg_chm, ~mean(Z), res = 1)</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre class="r"><code>h_max &lt;- lidR::grid_metrics(mof100_ctg_chm, ~max(Z), res = 1)</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
+
+## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84 =
+## OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum European Terrestrial
+## Reference System 1989 in Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<p><img src="/GIS_WiSe_20-21_FlorianFranz/post/2021-12-11-deriving-ecological-indices-from-lidar-data-renewed/lidar_renewed_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code>f &lt;- function(x) {
+  list(mean = mean(x), max = max(x))
+}
+
+h_mean_max &lt;- lidR::grid_metrics(mof100_ctg_chm, ~f(Z), res = 1)</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs
+
+## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84 =
+## OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum European Terrestrial
+## Reference System 1989 in Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre><code>## Warning in getProjectionRef(x, OVERRIDE_PROJ_DATUM_WITH_TOWGS84
+## = OVERRIDE_PROJ_DATUM_WITH_TOWGS84, : Discarded datum
+## European_Terrestrial_Reference_System_1989 in Proj4 definition: +proj=utm
+## +zone=32 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs</code></pre>
+<pre><code>## Warning in showSRID(SRS_string, format = &quot;PROJ&quot;, multiline = &quot;NO&quot;, prefer_proj
+## = prefer_proj): Discarded datum European Terrestrial Reference System 1989 in
+## Proj4 definition</code></pre>
+<pre class="r"><code>lidR::plot(h_mean, col = lidR::height.colors(20),
+           main = &quot;Mean height within 1 m² cells&quot;)</code></pre>
+<p><img src="/GIS_WiSe_20-21_FlorianFranz/post/2021-12-11-deriving-ecological-indices-from-lidar-data-renewed/lidar_renewed_files/figure-html/unnamed-chunk-4-2.png" width="672" /></p>
+<pre class="r"><code>lidR::plot(h_max, col = lidR::height.colors(20),
+           main = &quot;Maximum height within 1 m² cells&quot;)</code></pre>
+<p><img src="/GIS_WiSe_20-21_FlorianFranz/post/2021-12-11-deriving-ecological-indices-from-lidar-data-renewed/lidar_renewed_files/figure-html/unnamed-chunk-4-3.png" width="672" /></p>
+<pre class="r"><code>lidR::plot(h_mean_max, col = lidR::height.colors(20),
+           main = c(&quot;Mean height within 1 m² cells&quot;,
+                    &quot;Maximum height within 1 m² cells&quot;),
+           cex.main = 1)</code></pre>
+<p><img src="/GIS_WiSe_20-21_FlorianFranz/post/2021-12-11-deriving-ecological-indices-from-lidar-data-renewed/lidar_renewed_files/figure-html/unnamed-chunk-4-4.png" width="672" /></p>
+</div>
+</div>
+</div>
