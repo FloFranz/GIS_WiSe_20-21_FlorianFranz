@@ -16,7 +16,7 @@ This is an update of my last blog 'Deriving ecological indices from LiDAR data'.
 require(envimaR)
 
 # MANDANTORY: defining the root folder DO NOT change this line
-rootDIR = "E:/edu/agis"
+root_folder = "E:/edu/agis"
 
 #-- Further customization of the setup by the user this section 
 #-- can be freely customized only the definition of additional packages 
@@ -24,12 +24,12 @@ rootDIR = "E:/edu/agis"
 #-- appendpackagesToLoad and appendProjectDirList
 #-- feel free to remove this lines if you do not need them
 # define  additional packages comment if not needed
-appendpackagesToLoad = c("tmap")
+appendpackagesToLoad = c("lidR","future")
 # define additional subfolders comment if not needed
-appendProjectDirList =  c("data/lidar/", "data/lidar/l_raw/", "data/lidar/l_norm/", "data/lidar/l_normalized/", "data/lidar/l_raster/")
+appendProjectDirList =  c("data/lidar/", "data/lidar/l_raw/", "data/lidar/l_norm/", "data/lidar/l_raster/")
 
 # MANDANTORY: calling the setup script also DO NOT change this line
-source(file.path(envimaR::alternativeEnvi(root_folder = rootDIR),"src/agis_setup1.R"),local = knitr::knit_global())
+source(file.path(envimaR::alternativeEnvi(root_folder = root_folder),"src/000-rspatial-setup.R"),local = knitr::knit_global())
 ```
 
 ### Setting up a lidR catalog structure
