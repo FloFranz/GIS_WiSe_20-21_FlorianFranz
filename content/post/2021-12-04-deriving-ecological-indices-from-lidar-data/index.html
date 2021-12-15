@@ -7,7 +7,7 @@ categories: ["aGIS"]
 tags: ["exercise"]
 ---
 
-<script src="/GIS_WiSe_20-21_FlorianFranz/rmarkdown-libs/header-attrs/header-attrs.js"></script>
+<script src="{{< blogdown/postref >}}index_files/header-attrs/header-attrs.js"></script>
 
 
 <div id="lidar-based-forest-indices" class="section level1">
@@ -71,18 +71,18 @@ h_mean &lt;- lidR::grid_metrics(lidar_file, ~mean(Z), res = 1)
 
 lidR::plot(h_mean, col = lidR::height.colors(50),
            main = &quot;Mean height within 1 m² cells&quot;)</code></pre>
-<p><img src="/GIS_WiSe_20-21_FlorianFranz/post/2021-12-04-deriving-ecological-indices-from-lidar-data/lidar_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>Or as above for the whole cloud with .stdmetrics several metrics in this case within 100 m² cells.</p>
 <pre class="r"><code>grid_metrics &lt;- lidR::grid_metrics(lidar_file, func = lidR::.stdmetrics, res = 10)
 
 lidR::plot(grid_metrics, col = lidR::height.colors(50))</code></pre>
-<p><img src="/GIS_WiSe_20-21_FlorianFranz/post/2021-12-04-deriving-ecological-indices-from-lidar-data/lidar_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p>Additionally, grid metrics are useful to calculate the density, which is defined as the number of points within a pixel divided by the area of the pixels (Roussel et al. 2021).</p>
 <pre class="r"><code>density &lt;- lidR::grid_metrics(lidar_file, ~length(Z)/1, res = 1)
 
 lidR::plot(density, col = gray.colors(50,0,1),
            main = &quot;Point density within 1 m² cells&quot;)</code></pre>
-<p><img src="/GIS_WiSe_20-21_FlorianFranz/post/2021-12-04-deriving-ecological-indices-from-lidar-data/lidar_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<p><img src="{{< blogdown/postref >}}index_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
 <p>Moreover, metrics can also derived at the individual tree level. This requires a tree segmentation before. Derived metrics at the voxel and point level are not considered, as they are not seem to be relevant for a prediction of the microclimate.</p>
 <p><strong>Questions</strong></p>
 <ul>
