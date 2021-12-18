@@ -2,7 +2,7 @@
 title: "Deriving ecological indices from LiDAR data renewed"
 date: 2021-11-11
 author: "Florian Franz"
-image:       ""
+image: "/img/forest.jpg"
 categories: ["aGIS"]
 tags: ["task"]
 toc: true
@@ -10,30 +10,14 @@ toc: true
 
 # LiDAR based Forest Indices
 
+This is an update of my last blog 'Deriving ecological indices from LiDAR data'. This time a lidR catalog structure is used to create a canopy height model (CHM). The CHM is then used to derive some metrics at the grid level and considers now only the stand without the elevation of the surface.
 
-### Introduction
-Give a brief overview about the content and intented outcome of this task. Finsih this overview with a clearly adressed research question.
-
-
-### Data and Methods
-
-Give a brief overview about the data and methods you are using 
-
-### Results
-
-Describe your results with respect to the choosen Approach and with respect to the leading question 
-
-## Discussion
-Take your research question and your results and discuss the results with respect to your approach
-
-### References
-
-
-```{r, echo=FALSE, results='hide', warning=FALSE, message=FALSE}
+```{r, include=FALSE, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+knitr::knit_global()
 require(envimaR)
 
 # MANDANTORY: defining the root folder DO NOT change this line
-rootDIR = "E:/edu/agis"
+root_folder = "E:/edu/agis"
 
 #-- Further customization of the setup by the user this section 
 #-- can be freely customized only the definition of additional packages 
@@ -41,18 +25,18 @@ rootDIR = "E:/edu/agis"
 #-- appendpackagesToLoad and appendProjectDirList
 #-- feel free to remove this lines if you do not need them
 # define  additional packages comment if not needed
-appendpackagesToLoad = c("tmap")
+appendpackagesToLoad = c("lidR","future")
 # define additional subfolders comment if not needed
-appendProjectDirList =  c("data/lidar/", "data/lidar/l_raw/", "data/lidar/l_norm/", "data/lidar/l_normalized/", "data/lidar/l_raster/")
+appendProjectDirList =  c("data/lidar/", "data/lidar/l_raw/", "data/lidar/l_norm/", "data/lidar/l_raster/")
 
 # MANDANTORY: calling the setup script also DO NOT change this line
-source(file.path(envimaR::alternativeEnvi(root_folder = rootDIR),"src/agis_setup1.R"),echo = TRUE)
+source(file.path(envimaR::alternativeEnvi(root_folder = root_folder),"src/000-rspatial-setup.R"),local = knitr::knit_global())
 ```
 
 ### Setting up a lidR catalog structure
 
-```{r, message=FALSE}
-library(future)
+```{r, message=FALSE, warning=FALSE}
+#library(future)
 
 # Define variables for the lidR catalog
 chunksize = 250
@@ -61,16 +45,17 @@ epsg_number = 25832
 
 mof100_ctg <- lidR::readLAScatalog(envrmt$path_l_raw)
 lidR::projection(mof100_ctg) <- epsg_number
-lidR::opt_chunk_size(mof100_ctg) = chunksize
+lidR::opt_chunk_size(mof100_ctg) <- chunksize
 future::plan(multisession)
 lidR::opt_chunk_buffer(mof100_ctg) <- overlap
+lidR::opt_laz_compression(mof100_ctg) <- TRUE
 lidR::opt_output_files(mof100_ctg) <- paste0(envrmt$path_l_norm,"/{ID}_norm")
 mof100_ctg@output_options$drivers$Raster$param$overwrite <- TRUE
 ```
 
 ### Derive CHM information from the ALS point cloud
 
-```{r, message=FALSE, results='hide'}
+```{r, message=FALSE, warning=FALSE, results='hide'}
 # Calculate a digital terrain model
 dtm_knnidw_1m <- lidR::grid_terrain(mof100_ctg, res=1, algorithm = lidR::knnidw(k = 6L, p = 2))
 
@@ -80,27 +65,66 @@ mof100_ctg_chm <- lidR::normalize_height(mof100_ctg, dtm_knnidw_1m)
 
 ### Calculation of metrics at the grid level
 
-```{r, message=FALSE, results='hide'}
-h_mean <- lidR::grid_metrics(mof100_ctg_chm, ~mean(Z), res = 1)
-h_max <- lidR::grid_metrics(mof100_ctg_chm, ~max(Z), res = 1)
-
+```{r, message=FALSE, warning=FALSE}
+# Calculate mean and maximum height
 f <- function(x) {
   list(mean = mean(x), max = max(x))
 }
 
+tag <- "_gm"
+lidR::opt_output_files(mof100_ctg_chm) <- paste0(envrmt$path_l_norm,"/{ID}",tag)
+
 h_mean_max <- lidR::grid_metrics(mof100_ctg_chm, ~f(Z), res = 1)
 
-lidR::plot(h_mean, col = lidR::height.colors(20),
-           main = "Mean height within 1 m² cells")
+# Point density
+density <- lidR::grid_metrics(mof100_ctg_chm, ~length(Z)/1, res = 1)
 
-lidR::plot(h_max, col = lidR::height.colors(20),
-           main = "Maximum height within 1 m² cells")
+# Leaf area density
+# lad <- lidR::grid_metrics(mof100_ctg_chm, ~LAD(Z), res = 10)
+# Error: Duplicated pixels found. At least one of the metrics was not a number. Each metric should be a single number.
+```
 
-lidR::plot(h_mean_max, col = lidR::height.colors(20),
+```{r}
+# Show mean height
+h_mean_max[[1]]
+
+# Show maximum height
+h_mean_max[[2]]
+
+# Show point density
+density
+```
+
+### Workaround GDAL
+
+```{r, message=FALSE, warning=FALSE}
+require(gdalUtils)
+# wir bauen direkt ein mosaik aus den tif-Kachelen der Metrics
+gdalUtils::mosaic_rasters(gdalfile = list.files(envrmt$path_l_norm,
+                                                pattern = glob2rx(paste0("*",tag,".tif")),
+                                                full.names = TRUE),  # liste aller files mit dem tag
+                          output_Raster = TRUE,
+                          dst_dataset = paste0(envrmt$path_l_norm,"h_mean_max.tif")) # ausgabe datei
+# einlesen der Daten als rasterstack
+h_mean_max <- raster::stack(paste0(envrmt$path_l_norm,deparse(substitute(h_mean_max)),".tif"))
+```
+
+```{r, echo=FALSE}
+lidR::plot(h_mean_max,
+           col = lidR::height.colors(20),
            main = c("Mean height within 1 m² cells",
                     "Maximum height within 1 m² cells"),
            cex.main = 1)
+
+lidR::plot(density, col = gray.colors(50,0,1),
+           main = "Point density within 1 m² cells")
 ```
+
+### References
+
+- Roussel, J.-R., Goodbody, T.R.H. & Tompalski, P. (2021): The lidR package. https://jean-romain.github.io/lidRbook/index.html (access: 11.12.2021).
+
+- Header image: https://www.bundesregierung.de/breg-de/suche/rund-800-millionen-euro-fuer-den-wald-1675358 (Getty Images/iStockphoto/AVTG)
 
 
 

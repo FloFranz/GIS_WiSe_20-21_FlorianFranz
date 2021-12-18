@@ -219,10 +219,8 @@ Task
 	
         <div class="post-content-preview">
 	
-            LiDAR based Forest IndicesIntroductionGive a brief overview about the content and intented outcome of this task. Finsih this overview with a clearly adressed research question.
-Data and MethodsGive a brief overview about the data and methods you are using
-ResultsDescribe your results with respect to the choosen Approach and with respect to the leading question
-DiscussionTake your research question and your results and discuss the results with respect to your approach
+            LiDAR based Forest IndicesThis is an update of my last blog ‘Deriving ecological indices from LiDAR data’. This time a lidR catalog structure is used to create a canopy height model (CHM). The CHM is then used to derive some metrics at the grid level and considers now only the stand without the elevation of the surface.
+Setting up a lidR catalog structure#library(future)# Define variables for the lidR catalogchunksize = 250overlap = 25epsg_number = 25832mof100_ctg &lt;- lidR::readLAScatalog(envrmt$path_l_raw)lidR::projection(mof100_ctg) &lt;- epsg_numberlidR::opt_chunk_size(mof100_ctg) &lt;- chunksizefuture::plan(multisession)lidR::opt_chunk_buffer(mof100_ctg) &lt;- overlaplidR::opt_laz_compression(mof100_ctg) &lt;- TRUElidR::opt_output_files(mof100_ctg) &lt;- paste0(envrmt$path_l_norm,&quot;/{ID}_norm&quot;)mof100_ctg@output_options$drivers$Raster$param$overwrite &lt;- TRUEDerive CHM information from the ALS point cloud# Calculate a digital terrain modeldtm_knnidw_1m &lt;- lidR::grid_terrain(mof100_ctg, res=1, algorithm = lidR::knnidw(k = 6L, p = 2))# Remove the elevation of the surface from the catalog data and create a new catalogmof100_ctg_chm &lt;- lidR::normalize_height(mof100_ctg, dtm_knnidw_1m)Calculation of metrics at the grid level# Calculate mean and maximum heightf &lt;- function(x) {list(mean = mean(x), max = max(x))}tag &lt;- &quot;_gm&quot;lidR::opt_output_files(mof100_ctg_chm) &lt;- paste0(envrmt$path_l_norm,&quot;/{ID}&quot;,tag)h_mean_max &lt;- lidR::grid_metrics(mof100_ctg_chm, ~f(Z), res = 1)## Chunk 3 of 12 (8.
        
         </div>
     </a>
