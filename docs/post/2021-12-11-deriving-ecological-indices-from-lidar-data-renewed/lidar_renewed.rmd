@@ -29,6 +29,8 @@ appendpackagesToLoad = c("lidR","future")
 # define additional subfolders comment if not needed
 appendProjectDirList =  c("data/lidar/", "data/lidar/l_raw/", "data/lidar/l_norm/", "data/lidar/l_raster/")
 
+lidR.progress = FALSE
+
 # MANDANTORY: calling the setup script also DO NOT change this line
 source(file.path(envimaR::alternativeEnvi(root_folder = root_folder),"src/000-rspatial-setup.R"),local = knitr::knit_global())
 ```
@@ -71,7 +73,7 @@ f <- function(x) {
   list(mean = mean(x), max = max(x))
 }
 
-tag <- "_gm"
+tag <- "_h_mean_max"
 lidR::opt_output_files(mof100_ctg_chm) <- paste0(envrmt$path_l_norm,"/{ID}",tag)
 
 h_mean_max <- lidR::grid_metrics(mof100_ctg_chm, ~f(Z), res = 1)

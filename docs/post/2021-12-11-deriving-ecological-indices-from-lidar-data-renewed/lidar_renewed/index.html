@@ -244,7 +244,7 @@ f &lt;- function(x) {
   list(mean = mean(x), max = max(x))
 }
 
-tag &lt;- &quot;_gm&quot;
+tag &lt;- &quot;_h_mean_max&quot;
 lidR::opt_output_files(mof100_ctg_chm) &lt;- paste0(envrmt$path_l_norm,&quot;/{ID}&quot;,tag)
 
 h_mean_max &lt;- lidR::grid_metrics(mof100_ctg_chm, ~f(Z), res = 1)</code></pre>
@@ -273,8 +273,8 @@ density &lt;- lidR::grid_metrics(mof100_ctg_chm, ~length(Z)/1, res = 1)</code></
 ## Chunk 9 of 12 (66.7%): state &lt;U+26A0&gt;
 ## Chunk 10 of 12 (75%): state &lt;U+26A0&gt;
 ## Chunk 8 of 12 (83.3%): state &lt;U+26A0&gt;
-## Chunk 11 of 12 (91.7%): state &lt;U+26A0&gt;
-## Chunk 12 of 12 (100%): state &lt;U+26A0&gt;</code></pre>
+## Chunk 12 of 12 (91.7%): state &lt;U+26A0&gt;
+## Chunk 11 of 12 (100%): state &lt;U+26A0&gt;</code></pre>
 <pre class="r"><code># Leaf area density
 # lad &lt;- lidR::grid_metrics(mof100_ctg_chm, ~LAD(Z), res = 10)
 # Error: Duplicated pixels found. At least one of the metrics was not a number. Each metric should be a single number.</code></pre>
@@ -287,7 +287,7 @@ h_mean_max[[1]]</code></pre>
 ## extent     : 477500, 478218, 5631730, 5632500  (xmin, xmax, ymin, ymax)
 ## crs        : +proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs 
 ## source     : grid_metrics.vrt 
-## names      : X1_gm.1 
+## names      : X1_h_mean_max.1 
 ## values     : -0.2197778, 37.01462  (min, max)</code></pre>
 <pre class="r"><code># Show maximum height
 h_mean_max[[2]]</code></pre>
@@ -298,7 +298,7 @@ h_mean_max[[2]]</code></pre>
 ## extent     : 477500, 478218, 5631730, 5632500  (xmin, xmax, ymin, ymax)
 ## crs        : +proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs 
 ## source     : grid_metrics.vrt 
-## names      : X1_gm.2 
+## names      : X1_h_mean_max.2 
 ## values     : -0.011, 44.561  (min, max)</code></pre>
 <pre class="r"><code># Show point density
 density</code></pre>
@@ -308,7 +308,7 @@ density</code></pre>
 ## extent     : 477500, 478218, 5631730, 5632500  (xmin, xmax, ymin, ymax)
 ## crs        : +proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs 
 ## source     : grid_metrics.vrt 
-## names      : X1_gm 
+## names      : X1_h_mean_max 
 ## values     : 1, 253  (min, max)</code></pre>
 </div>
 <div id="workaround-gdal" class="section level3">
@@ -320,18 +320,18 @@ gdalUtils::mosaic_rasters(gdalfile = list.files(envrmt$path_l_norm,
                                                 full.names = TRUE),  # liste aller files mit dem tag
                           output_Raster = TRUE,
                           dst_dataset = paste0(envrmt$path_l_norm,&quot;h_mean_max.tif&quot;)) # ausgabe datei</code></pre>
-<pre><code>##  [1] &quot;E:/edu/agis/data/lidar/l_norm/1_gm.tif&quot; 
-##  [2] &quot;E:/edu/agis/data/lidar/l_norm/10_gm.tif&quot;
-##  [3] &quot;E:/edu/agis/data/lidar/l_norm/11_gm.tif&quot;
-##  [4] &quot;E:/edu/agis/data/lidar/l_norm/12_gm.tif&quot;
-##  [5] &quot;E:/edu/agis/data/lidar/l_norm/2_gm.tif&quot; 
-##  [6] &quot;E:/edu/agis/data/lidar/l_norm/3_gm.tif&quot; 
-##  [7] &quot;E:/edu/agis/data/lidar/l_norm/4_gm.tif&quot; 
-##  [8] &quot;E:/edu/agis/data/lidar/l_norm/5_gm.tif&quot; 
-##  [9] &quot;E:/edu/agis/data/lidar/l_norm/6_gm.tif&quot; 
-## [10] &quot;E:/edu/agis/data/lidar/l_norm/7_gm.tif&quot; 
-## [11] &quot;E:/edu/agis/data/lidar/l_norm/8_gm.tif&quot; 
-## [12] &quot;E:/edu/agis/data/lidar/l_norm/9_gm.tif&quot;</code></pre>
+<pre><code>##  [1] &quot;E:/edu/agis/data/lidar/l_norm/1_h_mean_max.tif&quot; 
+##  [2] &quot;E:/edu/agis/data/lidar/l_norm/10_h_mean_max.tif&quot;
+##  [3] &quot;E:/edu/agis/data/lidar/l_norm/11_h_mean_max.tif&quot;
+##  [4] &quot;E:/edu/agis/data/lidar/l_norm/12_h_mean_max.tif&quot;
+##  [5] &quot;E:/edu/agis/data/lidar/l_norm/2_h_mean_max.tif&quot; 
+##  [6] &quot;E:/edu/agis/data/lidar/l_norm/3_h_mean_max.tif&quot; 
+##  [7] &quot;E:/edu/agis/data/lidar/l_norm/4_h_mean_max.tif&quot; 
+##  [8] &quot;E:/edu/agis/data/lidar/l_norm/5_h_mean_max.tif&quot; 
+##  [9] &quot;E:/edu/agis/data/lidar/l_norm/6_h_mean_max.tif&quot; 
+## [10] &quot;E:/edu/agis/data/lidar/l_norm/7_h_mean_max.tif&quot; 
+## [11] &quot;E:/edu/agis/data/lidar/l_norm/8_h_mean_max.tif&quot; 
+## [12] &quot;E:/edu/agis/data/lidar/l_norm/9_h_mean_max.tif&quot;</code></pre>
 <pre><code>## class      : RasterBrick 
 ## dimensions : 770, 718, 552860, 1  (nrow, ncol, ncell, nlayers)
 ## resolution : 1, 1  (x, y)
