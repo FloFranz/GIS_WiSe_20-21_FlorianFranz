@@ -17,5 +17,14 @@
 Setting up a lidR catalog structure#library(future)# Define variables for the lidR catalogchunksize = 250overlap = 25epsg_number = 25832mof100_ctg &amp;lt;- lidR::readLAScatalog(envrmt$path_l_raw)lidR::projection(mof100_ctg) &amp;lt;- epsg_numberlidR::opt_chunk_size(mof100_ctg) &amp;lt;- chunksizefuture::plan(multisession)lidR::opt_chunk_buffer(mof100_ctg) &amp;lt;- overlaplidR::opt_laz_compression(mof100_ctg) &amp;lt;- TRUElidR::opt_output_files(mof100_ctg) &amp;lt;- paste0(envrmt$path_l_norm,&amp;quot;/{ID}_norm&amp;quot;)mof100_ctg@output_options$drivers$Raster$param$overwrite &amp;lt;- TRUEDerive CHM information from the ALS point cloud# Calculate a digital terrain modeldtm_knnidw_1m &amp;lt;- lidR::grid_terrain(mof100_ctg, res=1, algorithm = lidR::knnidw(k = 6L, p = 2))# Remove the elevation of the surface from the catalog data and create a new catalogmof100_ctg_chm &amp;lt;- lidR::normalize_height(mof100_ctg, dtm_knnidw_1m)Calculation of metrics at the grid level# Calculate mean and maximum heightf &amp;lt;- function(x) {list(mean = mean(x), max = max(x))}tag &amp;lt;- &amp;quot;_h_mean_max&amp;quot;lidR::opt_output_files(mof100_ctg_chm) &amp;lt;- paste0(envrmt$path_l_norm,&amp;quot;/{ID}&amp;quot;,tag)h_mean_max &amp;lt;- lidR::grid_metrics(mof100_ctg_chm, ~f(Z), res = 1)## Chunk 3 of 12 (8.</description>
     </item>
     
+    <item>
+      <title>Deriving ecological indices from LiDAR data renewed 2.0</title>
+      <link>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/post/2021-12-21-deriving-ecological-indices-from-lidar-data-renewed-2-0/lidar_renewed_2.0/</link>
+      <pubDate>Thu, 11 Nov 2021 00:00:00 +0000</pubDate>
+      
+      <guid>https://FloFranz.github.io/GIS_WiSe_20-21_FlorianFranz/post/2021-12-21-deriving-ecological-indices-from-lidar-data-renewed-2-0/lidar_renewed_2.0/</guid>
+      <description>LiDAR based Forest IndicesFollowing up my last two posts, I will now introduce the final set of predictor variables to obtain a reliable prediction of the microclimate parameters temperature and humidity. Some of them were already used in other studies and have proven their worth. Others were intuitively chosen by me because they are considered useful for predicting the microclimate in the forest. Very useful is the paper by Carrasco et al.</description>
+    </item>
+    
   </channel>
 </rss>

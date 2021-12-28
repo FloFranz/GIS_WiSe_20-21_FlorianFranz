@@ -1,0 +1,327 @@
+---
+title: "Deriving ecological indices from LiDAR data renewed 2.0"
+date: 2021-11-11
+author: "Florian Franz"
+image: "/img/forest.jpg"
+categories: ["aGIS"]
+tags: ["task"]
+toc: true
+---
+
+
+# LiDAR based Forest Indices
+
+Following up my last two posts, I will now introduce the final set of predictor variables to obtain a reliable prediction of the microclimate parameters temperature and humidity. Some of them were already used in other studies and have proven their worth. Others were intuitively chosen by me because they are considered useful for predicting the microclimate in the forest. Very useful is the paper by Carrasco et al. (2019). In their study they show a correlation matrix among LiDAR derived metrics and also temperature. This enables to see which variables are correlated with temperature and how strongly.
+
+```{r, include=FALSE, echo=FALSE, warning=FALSE, message=FALSE, cache=FALSE}
+knitr::knit_global()
+require(envimaR)
+
+# MANDANTORY: defining the root folder DO NOT change this line
+root_folder = "E:/edu/agis"
+
+#-- Further customization of the setup by the user this section 
+#-- can be freely customized only the definition of additional packages 
+#-- and directory paths MUST be done using the two variables 
+#-- appendpackagesToLoad and appendProjectDirList
+#-- feel free to remove this lines if you do not need them
+# define  additional packages comment if not needed
+appendpackagesToLoad = c("lidR","future")
+# define additional subfolders comment if not needed
+appendProjectDirList =  c("data/lidar/", "data/lidar/l_raw/", "data/lidar/l_norm/", "data/lidar/l_raster/")
+
+lidR.progress = FALSE
+
+# MANDANTORY: calling the setup script also DO NOT change this line
+source(file.path(envimaR::alternativeEnvi(root_folder = root_folder),"src/000-rspatial-setup.R"),local = knitr::knit_global())
+```
+
+### Read las file
+
+```{r}
+las_files = list.files(envrmt$path_l_raw,
+                       pattern = glob2rx("*.las"),
+                       full.names = TRUE)
+
+las <- lidR::readLAS(las_files[1])
+
+epsg_number = 25832
+
+crs(las) <- epsg_number
+las
+```
+
+### Create a CHM
+
+```{r, message=FALSE, warning=FALSE}
+# Height normalisation within the point cloud
+norm_las <- lidR::normalize_height(las, lidR::tin())
+
+# Check if all ground points are 0
+hist(filter_ground(norm_las)$Z, breaks = seq(-0.45, 0.45, 0.01), main = "", xlab = "Elevation")
+
+# Calculate CHM
+chm <- grid_canopy(norm_las, res = 1.0, lidR::pitfree(thresholds = c(0,2,5,10,15), c(0,1.5)))
+chm
+```
+
+```{r, echo=FALSE}
+# tmap plot
+tmap::tm_shape(chm) +
+tmap::tm_raster(title = "Pitfree CHM 1 m² cells", palette = lidR::height.colors(20)) +
+  tm_grid() +
+  tm_layout(legend.outside = TRUE)
+```
+
+### Predictors
+
+#### Elevation
+
+One predictor variable could be the elevation of the surface. This has been found to be a proven variable for predicting microclimate (e.g. George et al. (2015), Latif (2012)). Therefore, a digital terrain model (DTM) is generated using invert distance weighting.
+
+```{r, warning=FALSE}
+dtm <- lidR::grid_terrain(las, res = 1.0, algorithm = lidR::knnidw(k = 6L, p = 2))
+```
+
+```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=5}
+par_org <- par()
+par(mfrow = c(1,2), cex.main = 1)
+
+hist(dtm,
+     breaks = 20,
+     main = "Histogram of the elevation",
+     xlab = "Elevation [m]")
+
+lidR::plot(dtm,
+           col = lidR::height.colors(50),
+           main = "Invert distance weighting DTM 1 m² cells")
+
+par(par_org)
+```
+
+#### Slope and exposition
+
+Based on the the DTM, further terrain metrics can be calculated. In the context of microclimate modelling, slope and exposition could be helpful variables. 
+
+```{r}
+slope <- raster::terrain(dtm, opt = "slope", unit = "degrees", neighbors = 8)
+exposition <- raster::terrain(dtm, opt = "aspect", unit = "degrees", neighbors = 8)
+```
+
+```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=7}
+par(mfrow = c(2,2), cex.main = 1)
+
+hist(slope,
+     main = "Histogram of slope",
+     xlab = "Slope [°]")
+
+hist(exposition,
+     main = "Histogram of exposition",
+     xlab = "Exposition [°]")
+
+raster::plot(slope,
+             col = topo.colors(25),
+             main = "Slope in degrees")
+
+raster::plot(exposition,
+             col = bpy.colors(25),
+             main = "Exposition in degrees")
+
+par(par_org)
+```
+
+#### Canopy mean height, maximum height and standard deviation of the height
+
+Further selected predictor variables are the canopy mean height, maximum height and standard deviation of the height. The canopy heigth was also used in other studies (e.g. George et al. (2015), Latif (2012)). It is discussible whether the whole CHM should be used or the mean height in e.g. 1 m² cells. I'm going with the mean height for now. Carrasco et al. (2019) calculated a Pearson coefficient of 0.52 between temperature and both, the canopy mean heigth and standard deviation of the height. 
+
+```{r}
+# Function for calculating mean, max and standard deviation of canopy height
+height_metrics <- function(x) {
+  list(mean = mean(x),
+       max = max(x), 
+       sd(x))
+}
+
+h_mean_max_sd <- lidR::grid_metrics(norm_las, func = ~height_metrics(Z), res = 1.0)
+```
+
+```{r, echo=FALSE, warning=FALSE, fig.width=12, fig.height=7}
+par(mfrow = c(2,3), cex.main = 1)
+
+hist(h_mean_max_sd[[1]],
+     main = "Histogram of canopy mean height",
+     xlab = "Height [m]")
+
+hist(h_mean_max_sd[[2]],
+     main = "Histogram of canopy maximum height",
+     xlab = "Height [m]")
+
+hist(h_mean_max_sd[[3]],
+     main = "Histogram of canopy height standard deviation",
+     xlab = "Height [m]")
+
+raster::plot(h_mean_max_sd[[1]],
+             col = lidR::height.colors(20),
+             main = "Canopy mean height 1 m² cells")
+
+raster::plot(h_mean_max_sd[[2]],
+             col = lidR::height.colors(20),
+             main = "Canopy maximum height 1 m² cells")
+
+col_pal <- colorRampPalette(c("forestgreen","green","yellow","red","purple4"))
+raster::plot(h_mean_max_sd[[3]],
+             col =  col_pal(10),
+             main = "Canopy height standard deviation 1 m² cells")
+
+par(par_org)
+```
+
+#### Point density
+
+Another predictor variable could be the point density. It is calculated according to Roussel et al. (2021).
+
+```{r}
+density <- lidR::grid_metrics(norm_las, ~length(Z)/1, res = 1.0)
+```
+
+```{r, echo=FALSE, warning=FALSE, fig.width=10, fig.height=5}
+par(mfrow = c(1,2), cex.main = 1)
+
+hist(density,
+     main = "Histogram of point density",
+     xlab = "Number of points")
+
+raster::plot(density, 
+             col = gray.colors(50,0,1),
+             main = "Point density 1 m² cells")
+
+par(par_org)
+```
+
+#### First returns mean height, maxiumum height and standard deviation of the height from the first returns
+
+According to Carrasco et al. (2019), mean height, maximum height and standard deviation of the height all based from the first returns are additional predictor variables. Pearson coefficients between temperature and these three metrics are 0.51 (mean height), 0.46 (max height) and 0.61 (sd height). I use the same function (height_metrics) as above applied for the whole canopy, but this time it is only calculated for the first returns. 
+
+```{r}
+return_mean_max_sd <- lidR::grid_metrics(norm_las, func = ~height_metrics(Z),
+                                         res = 1.0, filter = ~ReturnNumber == 1L)
+```
+
+```{r, echo=FALSE, warning=FALSE, fig.width=12, fig.height=7}
+par(mfrow = c(2,3), cex.main = 1)
+
+hist(return_mean_max_sd[[1]],
+     main = "Histogram of first returns mean height",
+     xlab = "Height [m]")
+
+hist(return_mean_max_sd[[2]],
+     main = "Histogram of first returns maximum height",
+     xlab = "Height [m]")
+
+hist(return_mean_max_sd[[3]],
+     main = "Histogram of first returns height standard deviation",
+     xlab = "Height [m]")
+
+raster::plot(return_mean_max_sd[[1]],
+             col = lidR::height.colors(20),
+             main = "First returns mean height 1 m² cells")
+
+raster::plot(return_mean_max_sd[[2]],
+             col = lidR::height.colors(20),
+             main = "First returns maximum height 1 m² cells")
+
+raster::plot(return_mean_max_sd[[3]],
+             col =  col_pal(10),
+             main = "First returns height standard deviation 1 m² cells")
+
+par(par_org)
+```
+
+#### LAD and Shannon index of LAD
+
+Carrasco et al. (2019) also calculated a high correlation between the temperature and the leaf are density (LAD) (more precisely the mean LAD across all voxels) (0.72) and the Shannon index of LAD (0.70). Therefore, these two variables could also be useful as predictors. It is necessary to find a way how to calculate the mean LAD and the Shannon index of LAD across all voxels. The paper by Carrasco et al. (2019) shows an approach how do deal with this. In this case, the LAD and the Shannon index are simply calculated at the voxel level.
+
+```{r}
+z <- norm_las[["Z"]]
+z <- z[z > 0]
+
+# LAD
+lad <- lidR::LAD(z, z0 = 0)
+
+lad_vox <- lidR::voxel_metrics(norm_las, func = lidR::LAD(Z), res = 5.0)
+lad_vox <- na.omit(lad_vox)
+
+#lidR::plot(lad_vox, color = "lad", colorPalette = lidR::forest.colors(10))
+
+# Shannon index
+shannon <- lidR::entropy(z)
+
+shannon_vox <- lidR:::voxel_metrics(norm_las, func = lidR::entropy(Z), res = 5.0)
+shannon_vox <- na.omit(shannon_vox)
+
+#lidR::plot(shannon_vox, color = "V1", colorPalette = lidR::forest.colors(10))
+```
+
+```{r, echo=FALSE, warning=FALSE, fig.width=12, fig.height=4}
+par(mfrow = c(1,3), cex.main = 1)
+
+plot(lad,
+     type = "l",
+     main = "LAD with height",
+     xlab = "Elevation",
+     ylab = "Leaf area density")
+
+hist(lad_vox$lad,
+     main = "Histogram of the LAD",
+     xlab = "LAD")
+
+hist(shannon_vox$V1,
+     main = "Histogram of the Shannon index",
+     xlab = "Shannon index")
+
+par(par_org)
+```
+
+### Final list of predictor variables
+
+- Elevation (DTM)
+- Slope
+- Exposition
+- Mean canopy height
+- Maximum canopy height
+- Standard deviation of the canopy height
+- Point density
+- Mean height of first returns
+- Maxiumum height of first returns
+- Standard deviation of first returns
+- LAD
+- Shannon index of LAD
+- LAI ???
+
+
+### References
+
+- Carrasco, L., Giam, X., Papeş, M. & Sheldon, K.S. (2019): Metrics of Lidar-Derived 3D Vegetation Structure Reveal Contrasting Effects of Horizontal and Vertical Forest Heterogeneity on Bird Species Richness. *Remote Sens.* 11, 743.
+
+- George, A.D., Thompson, F.R. & Faaborg, J. (2015): Using LiDAR and remote microclimate loggers to downscale near-surface air temperatures for site-level studies. *Remote Sens. Lett.* 6 (12), 924-932.
+
+- Header image: https://www.bundesregierung.de/breg-de/suche/rund-800-millionen-euro-fuer-den-wald-1675358 (Getty Images/iStockphoto/AVTG)
+
+- Latif, Z.A. (2012): Forest Microclimate Modelling Using Remotely Sensed Data. *ISrJ* 2 (1), 19-25.
+
+- Roussel, J.-R., Goodbody, T.R.H. & Tompalski, P. (2021): The lidR package. https://jean-romain.github.io/lidRbook/index.html (access: 28.12.2021).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
